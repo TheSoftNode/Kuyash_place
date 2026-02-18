@@ -24,10 +24,10 @@ export default function QRCodePage() {
   const generateQR = async () => {
     setLoading(true);
     try {
-      const response: any = await qrAPI.generate({
+      const response = await qrAPI.generate({
         url: fullMenuUrl,
         size: parseInt(qrSize),
-      });
+      }) as { data: { qrCode: string } };
       setQrCode(response.data.qrCode);
       toast.success('QR code generated successfully');
     } catch (error) {
@@ -60,47 +60,49 @@ export default function QRCodePage() {
       </div>
 
       {/* Configuration */}
-      <Card className="p-6">
-        <h3 className="text-lg font-semibold mb-4">Configuration</h3>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="url">Menu URL</Label>
+      <Card className="p-4">
+        <h3 className="text-base font-semibold mb-3">Configuration</h3>
+        <div className="space-y-3">
+          <div>
+            <Label htmlFor="url" className="text-xs mb-1 block">Menu URL</Label>
             <div className="flex gap-2">
               <Input
                 id="url"
                 value={menuUrl}
                 onChange={(e) => setMenuUrl(e.target.value)}
                 placeholder={typeof window !== 'undefined' ? `${window.location.origin}/menu/view` : '/menu/view'}
+                className="h-8 text-sm"
               />
-              <Button variant="outline" size="icon" onClick={copyUrl}>
-                <Copy className="w-4 h-4" />
+              <Button variant="outline" size="icon" onClick={copyUrl} className="h-8 w-8 flex-shrink-0">
+                <Copy className="w-3.5 h-3.5" />
               </Button>
-              <Button variant="outline" size="icon" onClick={() => window.open(fullMenuUrl, '_blank')}>
-                <ExternalLink className="w-4 h-4" />
+              <Button variant="outline" size="icon" onClick={() => window.open(fullMenuUrl, '_blank')} className="h-8 w-8 flex-shrink-0">
+                <ExternalLink className="w-3.5 h-3.5" />
               </Button>
             </div>
-            <p className="text-xs text-gray-500">Leave empty to use default menu URL</p>
+            <p className="text-xs text-gray-500 mt-1">Leave empty to use default menu URL</p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="size">QR Code Size</Label>
-            <Select value={qrSize} onValueChange={setQrSize}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="256">Small (256x256)</SelectItem>
-                <SelectItem value="512">Medium (512x512)</SelectItem>
-                <SelectItem value="1024">Large (1024x1024)</SelectItem>
-                <SelectItem value="2048">Extra Large (2048x2048)</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="flex gap-2 items-end">
+            <div className="flex-1">
+              <Label htmlFor="size" className="text-xs mb-1 block">QR Code Size</Label>
+              <Select value={qrSize} onValueChange={setQrSize}>
+                <SelectTrigger className="h-8 text-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="256">Small (256x256)</SelectItem>
+                  <SelectItem value="512">Medium (512x512)</SelectItem>
+                  <SelectItem value="1024">Large (1024x1024)</SelectItem>
+                  <SelectItem value="2048">Extra Large (2048x2048)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button onClick={generateQR} disabled={loading} className="h-8 px-4 text-sm flex-shrink-0">
+              <QrCode className="w-3.5 h-3.5 mr-1.5" />
+              {loading ? 'Generating...' : 'Generate QR Code'}
+            </Button>
           </div>
-
-          <Button onClick={generateQR} disabled={loading} className="w-full">
-            <QrCode className="w-4 h-4 mr-2" />
-            {loading ? 'Generating...' : 'Generate QR Code'}
-          </Button>
         </div>
       </Card>
 

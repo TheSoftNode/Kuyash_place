@@ -21,9 +21,9 @@ interface RecentActivityProps {
 export function RecentActivity({ activities }: RecentActivityProps) {
   const getIcon = (type: string) => {
     switch (type) {
-      case 'create': return <Plus className="w-4 h-4" />;
-      case 'update': return <Edit className="w-4 h-4" />;
-      case 'delete': return <Trash2 className="w-4 h-4" />;
+      case 'create': return <Plus className="w-3.5 h-3.5" />;
+      case 'update': return <Edit className="w-3.5 h-3.5" />;
+      case 'delete': return <Trash2 className="w-3.5 h-3.5" />;
       default: return null;
     }
   };
@@ -31,8 +31,8 @@ export function RecentActivity({ activities }: RecentActivityProps) {
   const getColor = (type: string) => {
     switch (type) {
       case 'create': return 'bg-emerald-600';
-      case 'update': return 'bg-[#c8a84b]';
-      case 'delete': return 'bg-red-600';
+      case 'update': return 'bg-[#e8281e]';
+      case 'delete': return 'bg-[#7a100d]';
       default: return 'bg-[#2a2a2a]';
     }
   };
@@ -51,31 +51,36 @@ export function RecentActivity({ activities }: RecentActivityProps) {
 
   return (
     <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6">
-      <h3 className="text-lg font-semibold mb-4 text-white">Recent Activity</h3>
-      <ScrollArea className="h-[300px]">
-        <div className="space-y-4">
-          {activities.map((activity, index) => (
+      <div className="flex items-center gap-2 mb-6">
+        <div className="w-1 h-5 bg-[#e8281e] rounded-full" />
+        <h3 className="text-base font-semibold text-white">Recent Activity</h3>
+      </div>
+      <ScrollArea className="h-[280px]">
+        <div className="space-y-4 pr-2">
+          {activities.length === 0 ? (
+            <p className="text-[#555] text-sm text-center py-8">No recent activity</p>
+          ) : activities.map((activity, index) => (
             <motion.div
               key={activity.id}
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05 }}
+              transition={{ delay: index * 0.04 }}
               className="flex items-start gap-3"
             >
-              <div className={`w-8 h-8 rounded-full ${getColor(activity.type)} flex items-center justify-center text-white flex-shrink-0`}>
+              <div className={`w-7 h-7 rounded-full ${getColor(activity.type)} flex items-center justify-center text-white flex-shrink-0 mt-0.5`}>
                 {getIcon(activity.type)}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white">
+                <p className="text-sm text-white font-medium leading-snug">
                   <span className="capitalize">{activity.type}d</span> {activity.item}
                 </p>
                 {activity.category && (
-                  <Badge variant="outline" className="mt-1 border-[#c8a84b]/40 text-[#c8a84b] text-xs">
+                  <Badge className="mt-1 bg-[#e8281e]/10 text-[#e8281e] border-[#e8281e]/20 text-[10px] px-1.5 py-0">
                     {activity.category}
                   </Badge>
                 )}
-                <p className="text-xs text-[#666] mt-1">
-                  {formatTime(activity.timestamp)} • {activity.user || 'Admin'}
+                <p className="text-[10px] text-[#555] mt-1">
+                  {formatTime(activity.timestamp)} · {activity.user || 'Admin'}
                 </p>
               </div>
             </motion.div>
